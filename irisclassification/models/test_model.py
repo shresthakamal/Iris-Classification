@@ -1,30 +1,47 @@
-# -*- coding: utf-8 -*-
-import click
-import logging
-from pathlib import Path
-from dotenv import find_dotenv, load_dotenv
+import os
+import pickle
+
+from irisclassification.config import config
+from irisclassification.features.build_features import build_features
 
 
-@click.command()
-@click.argument('input_filepath', type=click.Path(exists=True))
-@click.argument('output_filepath', type=click.Path())
-def main(input_filepath, output_filepath):
-    """ Runs data processing scripts to turn raw data from (../raw) into
-        cleaned data ready to be analyzed (saved in ../processed).
-    """
-    logger = logging.getLogger(__name__)
-    logger.info('making final data set from raw data')
+class TestModel:
+    def __init__(self, model_name):
+        self.model_name = model_name
+        self.clf = TestModel.load_model(model_name)
+
+    @staticmethod
+    def load_model(model_name):
+        if os.path.exists(
+            os.path.join(config.CHECKPOINTS_PATH, "{}.pkl".format(model_name))
+        ):
+            with open(
+                os.path.join(
+                    config.CHECKPOINTS_PATH, "{}.pkl".format(model_name)
+                ),
+                "rb",
+            ) as handle:
+                clf = pickle.load(handle)
+            return clf
+        else:
+            return None
+
+    def predict(self, **kwargs):
+        if self.clf:
+            predictions = self.clf.predict(kwargs["test_x"])
+            return predictions
+        else:
+            print("No saved model to predict !!")
+            return None
 
 
-if __name__ == '__main__':
-    log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-    logging.basicConfig(level=logging.INFO, format=log_fmt)
+if __name__ == "__main__":
+    tester = TestModel("knn")
 
-    # not used in this stub but often useful for finding various files
-    project_dir = Path(__file__).resolve().parents[2]
+    x_train, y_train, x_test, y_test = build_features(
+        dataset_path=os.path.join(config.DATA_PATH, "raw", config.DATASET_NAME),
+        split_ratio=config.TEST_SIZE,
+    )
+    predictions = tester.predict(test_x=x_test)
 
-    # find .env automagically by walking up directories until it's found, then
-    # load up the .env entries as environment variables
-    load_dotenv(find_dotenv())
-
-    main()
+    print(predictions)

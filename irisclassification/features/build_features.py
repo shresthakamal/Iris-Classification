@@ -33,14 +33,20 @@ def build_features(dataset_path, split_ratio=0.3):
 
     save_object(
         filepath=os.path.join(config.DATA_PATH, "processed"),
-        filename="train_data",
-        _object=train,
+        filename="pre_processed_data",
+        object_arr=[iris],
     )
 
     save_object(
-        filepath=os.path.join(config.DATA_PATH, "processed"),
+        filepath=os.path.join(config.CHECKPOINTS_PATH),
+        filename="train_data",
+        object_arr=[train],
+    )
+
+    save_object(
+        filepath=os.path.join(config.CHECKPOINTS_PATH),
         filename="test_data",
-        _object=test_x,
+        object_arr=[test],
     )
 
     return train_x, train_y, test_x, test_y

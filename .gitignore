@@ -18,7 +18,6 @@ tests/__pycache__/*
 
 __pycache__
 
-.isort.cfg
 
 __init__.py
 
