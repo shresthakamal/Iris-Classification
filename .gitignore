@@ -1,0 +1,12 @@
+# OSX Junk
+.DS_Store
+
+# test cache
+.cache/*
+tests/__pycache__/*
+*.pytest_cache/
+
+.gitattributes
+
+# Large Dataset Files Extensions
+*.csv
