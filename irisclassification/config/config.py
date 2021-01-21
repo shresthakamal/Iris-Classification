@@ -14,7 +14,7 @@ CHECKPOINTS_PATH = os.path.join(BASE_DIR, "checkpoints")
 
 LOG_FILE = os.path.join(CHECKPOINTS_PATH, "app.log")
 
-TEST_SIZE = 0.2
+TEST_SIZE = 0.25
 
 
 if __name__ == "__main__":

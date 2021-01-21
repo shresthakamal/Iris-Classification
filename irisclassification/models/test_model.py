@@ -1,9 +1,12 @@
+import logging
 import os
 import pickle
 
 from irisclassification.config import config
-from irisclassification.features.build_features import build_features
-from irisclassification.utils.model_accuracy import model_accuracy
+from irisclassification.utils.log import Log
+
+# from irisclassification.features.build_features import build_features
+# from irisclassification.utils.model_accuracy import model_accuracy
 
 
 class TestModel:
@@ -17,18 +20,21 @@ class TestModel:
             config.CHECKPOINTS_PATH, "models/{}.pkl".format(model_name)
         )
         if os.path.exists(file_path):
+            Log.init()
+            logging.info("Testing with model: {}".format(model_name))
+
             with open(file_path, "rb") as handle:
                 clf = pickle.load(handle)
             return clf
         else:
+            print("No saved model to predict !!")
             return None
 
     def predict(self, **kwargs):
         if self.clf:
-            predictions = self.clf.predict(kwargs["test_x"])
-            return predictions
+            prediction = self.clf.predict(kwargs["test_query"])
+            return prediction
         else:
-            print("No saved model to predict !!")
             return None
 
 

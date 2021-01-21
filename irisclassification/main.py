@@ -9,24 +9,28 @@ from irisclassification.models import test_model, train_model
 from irisclassification.utils.model_accuracy import model_accuracy
 
 
-def train_pipeline(model_name, x_train, y_train):
+def train_pipeline(model_name, x_train, y_train, x_test, y_test):
 
     model_params = parameters[model_name]
 
     trainer = train_model.TrainModel(model_name, **model_params)
 
-    trainer.fit(train_x=x_train, train_y=y_train)
+    clf = trainer.fit(train_x=x_train, train_y=y_train)
 
-    return True
+    predictions = clf.predict(x_test)
+
+    accuracy = model_accuracy(predictions, y_test)
+
+    return accuracy
 
 
-def test_pipeline(model_name, x_test):
+def test_pipeline(model_name, test_query):
 
     tester = test_model.TestModel(model_name)
 
-    predictions = tester.predict(test_x=x_test)
+    prediction = tester.predict(test_query=test_query)
 
-    return predictions
+    return prediction
 
 
 if __name__ == "__main__":
@@ -42,8 +46,6 @@ if __name__ == "__main__":
         options=("knn", "svm", "logisticregression", "decisiontree"),
     )().lower()
 
-    train_pipeline(user_selected_model, x_train, y_train)
+    print(train_pipeline(user_selected_model, x_train, y_train, x_test, y_test))
 
-    predictions = test_pipeline(user_selected_model, x_test)
-
-    print(model_accuracy(predictions, y_test))
+    print(test_pipeline(user_selected_model, [[4.7, 3.2, 1.3, 0.2]]))

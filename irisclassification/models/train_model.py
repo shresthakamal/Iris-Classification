@@ -1,10 +1,13 @@
+import logging
 import os
 import pickle
 
 from irisclassification.config import config, model_params
 from irisclassification.dispatcher import dispatcher
-from irisclassification.features.build_features import build_features
+from irisclassification.utils.log import Log
 from irisclassification.utils.seralizer import save_object
+
+# from irisclassification.features.build_features import build_features
 
 
 class TrainModel:
@@ -13,6 +16,9 @@ class TrainModel:
         self.model = dispatcher.MODELS[model_name](**kwargs)
 
     def fit(self, **kwargs):
+
+        Log.init()
+        logging.info("Training with model: {}".format(self.model_name))
 
         clf = self.model.fit(
             kwargs["train_x"], kwargs["train_y"].values.ravel()
@@ -23,7 +29,7 @@ class TrainModel:
             filename="{}".format(self.model_name),
             object_arr=[clf],
         )
-        return True
+        return clf
 
 
 if __name__ == "__main__":
