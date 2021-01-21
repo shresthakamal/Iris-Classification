@@ -1,30 +1,33 @@
-# -*- coding: utf-8 -*-
-import click
 import logging
-from pathlib import Path
-from dotenv import find_dotenv, load_dotenv
+import os
+
+import requests
+
+from irisclassification.config import config
+from irisclassification.utils import log
 
 
-@click.command()
-@click.argument('input_filepath', type=click.Path(exists=True))
-@click.argument('output_filepath', type=click.Path())
-def main(input_filepath, output_filepath):
-    """ Runs data processing scripts to turn raw data from (../raw) into
-        cleaned data ready to be analyzed (saved in ../processed).
-    """
-    logger = logging.getLogger(__name__)
-    logger.info('making final data set from raw data')
+def download_dataset(url):
+
+    log.Log.init()
+
+    dataset_filepath = os.path.join(
+        config.BASE_DIR, config.DATA_PATH, "raw", config.DATASET_NAME
+    )
+
+    try:
+        response = requests.get(url, stream=True)
+        logging.info("Dataset Successfully Downloaded !!")
+
+        with open(dataset_filepath, "wb") as handle:
+            for data in response.iter_content():
+                handle.write(data)
+
+    except requests.exceptions.RequestException as e:
+        logging.error("Dataset Download Failed, Exception:{}".format(e))
+
+    return True
 
 
-if __name__ == '__main__':
-    log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-    logging.basicConfig(level=logging.INFO, format=log_fmt)
-
-    # not used in this stub but often useful for finding various files
-    project_dir = Path(__file__).resolve().parents[2]
-
-    # find .env automagically by walking up directories until it's found, then
-    # load up the .env entries as environment variables
-    load_dotenv(find_dotenv())
-
-    main()
+if __name__ == "__main__":
+    print(download_dataset(url=config.DATASET_URL))
