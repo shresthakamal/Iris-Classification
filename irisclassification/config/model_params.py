@@ -1,6 +1,6 @@
 parameters = {
-    "knn": {"n_neighbours": 4},
+    "knn": {"n_neighbors": 4},
     "decisiontree": {},
-    "logistic": {},
+    "logisticregression": {},
     "svm": {},
 }

@@ -3,6 +3,7 @@ import pickle
 
 from irisclassification.config import config
 from irisclassification.features.build_features import build_features
+from irisclassification.utils.model_accuracy import model_accuracy
 
 
 class TestModel:
@@ -12,15 +13,11 @@ class TestModel:
 
     @staticmethod
     def load_model(model_name):
-        if os.path.exists(
-            os.path.join(config.CHECKPOINTS_PATH, "{}.pkl".format(model_name))
-        ):
-            with open(
-                os.path.join(
-                    config.CHECKPOINTS_PATH, "{}.pkl".format(model_name)
-                ),
-                "rb",
-            ) as handle:
+        file_path = os.path.join(
+            config.CHECKPOINTS_PATH, "models/{}.pkl".format(model_name)
+        )
+        if os.path.exists(file_path):
+            with open(file_path, "rb") as handle:
                 clf = pickle.load(handle)
             return clf
         else:
@@ -36,12 +33,14 @@ class TestModel:
 
 
 if __name__ == "__main__":
-    tester = TestModel("knn")
+    pass
 
-    x_train, y_train, x_test, y_test = build_features(
-        dataset_path=os.path.join(config.DATA_PATH, "raw", config.DATASET_NAME),
-        split_ratio=config.TEST_SIZE,
-    )
-    predictions = tester.predict(test_x=x_test)
+    # tester = TestModel("svm")
 
-    print(predictions)
+    # x_train, y_train, x_test, y_test = build_features(
+    #     dataset_path=os.path.join(config.DATA_PATH, "raw", config.DATASET_NAME),
+    #     split_ratio=config.TEST_SIZE,
+    # )
+    # predictions = tester.predict(test_x=x_test)
+
+    # print(model_accuracy(predictions, y_test))

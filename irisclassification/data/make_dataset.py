@@ -2,6 +2,7 @@ import logging
 import os
 
 import requests
+from tqdm import tqdm
 
 from irisclassification.config import config
 from irisclassification.utils import log
@@ -20,7 +21,7 @@ def download_dataset(url):
         logging.info("Dataset Successfully Downloaded !!")
 
         with open(dataset_filepath, "wb") as handle:
-            for data in response.iter_content():
+            for data in tqdm(response.iter_content()):
                 handle.write(data)
 
     except requests.exceptions.RequestException as e:

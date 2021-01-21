@@ -4,8 +4,8 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.tree import DecisionTreeClassifier
 
 MODELS = {
-    "logistic": LogisticRegression,
-    "svm": svm,
+    "logisticregression": LogisticRegression,
+    "svm": svm.SVC,
     "decisiontree": DecisionTreeClassifier,
     "knn": KNeighborsClassifier,
 }

@@ -19,19 +19,23 @@ class TrainModel:
         )
 
         save_object(
-            filepath=config.CHECKPOINTS_PATH,
+            filepath=os.path.join(config.CHECKPOINTS_PATH, "models"),
             filename="{}".format(self.model_name),
             object_arr=[clf],
         )
-        return clf
+        return True
 
 
 if __name__ == "__main__":
-    trainer = TrainModel("knn", n_neighbors=4)
+    pass
 
-    x_train, y_train, x_test, y_test = build_features(
-        dataset_path=os.path.join(config.DATA_PATH, "raw", config.DATASET_NAME),
-        split_ratio=config.TEST_SIZE,
-    )
+    # model_params = {"n_neighbors": 4}
 
-    print(trainer.fit(train_x=x_train, train_y=y_train))
+    # trainer = TrainModel("knn", **model_params)
+
+    # x_train, y_train, x_test, y_test = build_features(
+    #     dataset_path=os.path.join(config.DATA_PATH, "raw", config.DATASET_NAME),
+    #     split_ratio=config.TEST_SIZE,
+    # )
+
+    # print(trainer.fit(train_x=x_train, train_y=y_train))
